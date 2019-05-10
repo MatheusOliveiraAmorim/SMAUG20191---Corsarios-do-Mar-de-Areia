@@ -24,15 +24,24 @@ FPS = 60
 JOGADOR_ACEL = 0.5
 JOGADOR_FRIC = -0.12
 JOGADOR_GRAV = 0.8
+JOGADOR_PULO = 20
 
 #Propriedades de plataformas
 
-LISTA_PLATAFORMA = [(0, ALTURA - 40, LARGURA, 40),
-                    (LARGURA/2 - 50, ALTURA * 3 / 4, 100, 20),
-                    (125, ALTURA - 350, 100, 20),
-                    (50, 90, 60, 10),
-                    (175, 100, 50, 20),
-                    (175, 100, 50, 20)]
+LISTA_PLATAFORMA = [(0, ALTURA - 40, LARGURA, 40),#chão
+                    (300, 600, 100, 100),#caixa esquerda
+                    (400, 600, 100, 100), #caixa direita
+                    (0, 430, 150, 35), #plataforma canto
+                    (240, 250, 180, 35), #degrau
+                    (630, 250, 180, 35)] #plataforma porta
+
+
+#LISTA_PLATAFORMA = [(0, ALTURA - 40, LARGURA, 40),
+                    #(LARGURA/2 - 50, ALTURA * 3 / 4, 100, 20),
+                    #(125, ALTURA - 350, 100, 20),
+                    #(50, 90, 60, 10),
+                    #(175, 100, 50, 20),
+                    #(175, 100, 50, 20)]
 #Paleta de cores (VALORES EM RGB)
 BRANCO = (255,255,255)
 PRETO = (0,0,0)
@@ -60,7 +69,8 @@ class Jogador(pg.sprite.Sprite):
         self.image.fill(AMARELO)
         self.rect = self.image.get_rect()
         self.rect.center = (ALTURA/2, LARGURA/2)
-        self.pos = vec(LARGURA/2, ALTURA/2) #utiliza o vetor de 2 posições aqui para armazenar parametros (Posição, velocidade, aceleração)
+        #self.pos = vec(LARGURA/2, ALTURA/2) #utiliza o vetor de 2 posições aqui para armazenar parametros (Posição, velocidade, aceleração)
+        self.pos = vec(1000, 700) #utiliza o vetor de 2 posições aqui para armazenar parametros (Posição, velocidade, aceleração)
         self.vel = vec(0,0)
         self.acel = vec(0,0)
 
@@ -70,7 +80,7 @@ class Jogador(pg.sprite.Sprite):
         colPlat = pg.sprite.spritecollide(self, self.jogo.plataformas, False)#exemplo de uso do parametro jogo para usar as plataformas para comparação na colisão
         self.rect.x -= 1
         if colPlat:
-            self.vel.y = -20
+            self.vel.y = -JOGADOR_PULO
 
     def update(self):
         #Método que verifica a tecla pressionada e movimenta o jogador
@@ -148,14 +158,14 @@ class Jogo:
                 self.jogador.pos.y = colPlat[0].rect.top +1
                 self.jogador.vel.y = 0
         #se jogador chegar em certo ponto da tela
-        if self.jogador.rect.left <= ALTURA - 200:
+        '''if self.jogador.rect.left <= ALTURA - 200:
             self.jogador.pos.x -= abs(self.jogador.vel.x)
             for plat in self.plataformas:
                 plat.rect.x -= abs(self.jogador. vel.x)
         if self.jogador.rect.right <= ALTURA/4:
             self.jogador.pos.x += abs(self.jogador.vel.x)
             for plat in self.plataformas:
-                plat.rect.x += abs(self.jogador.vel.x)
+                plat.rect.x += abs(self.jogador.vel.x)'''
 
     def eventos(self):
         # Loop´do jogo - captura de eventos
