@@ -64,8 +64,9 @@ class Jogador(pg.sprite.Sprite):
         #verifica se existe plataforma abaixo antes de pular
         self.rect.x += 1
         colPlat = pg.sprite.spritecollide(self, self.jogo.plataformas, False)#exemplo de uso do parametro jogo para usar as plataformas para comparação na colisão
+        colChao = pg.sprite.spritecollide(self, self.jogo.chao, False)#exemplo de uso do parametro jogo para usar as plataformas para comparação na colisão
         self.rect.x -= 1
-        if colPlat:
+        if colPlat or colChao:
             self.vel.y = -JOGADOR_PULO
 
     def update(self):
@@ -100,7 +101,7 @@ class Jogador(pg.sprite.Sprite):
 
 
 
-LISTA_PLATAFORMA_TUTO = [(-1280, ALTURA - 40, LARGURA*2, 40),#chao
+LISTA_PLATAFORMA_TUTO = [#chao
                         (-165, 349, 330, 330),#caixa esquerda
                         (-496, 349, 330, 330), #caixa direita
                         (-1280, 200, 360, 35), #plataforma canto
@@ -187,8 +188,12 @@ class Jogo:
         self.mapa = Mapa(4)
         self.todos_sprites = pg.sprite.Group()
         self.plataformas = pg.sprite.Group()
+        self.chao = pg.sprite.Group()
         self.jogador = Jogador(self)
         self.todos_sprites.add(self.jogador)
+        c0 = Plataforma(-1280, ALTURA - 40, LARGURA*2, 40)
+        self.todos_sprites.add(c0)
+        self.chao.add(c0)
         for plat in LISTA_PLATAFORMA_TUTO:
             p = Plataforma(*plat)
             self.todos_sprites.add(p)
@@ -210,6 +215,10 @@ class Jogo:
     def update(self):
         # Loop´do jogo - atualiza a interface
         self.todos_sprites.update()
+        colChao = pg.sprite.spritecollide(self.jogador, self.chao, False)
+        if colChao:
+            self.jogador.pos.y = colChao[0].rect.top + 1
+            self.jogador.vel.y = 0
         #Checa se o jogador colidiu com a plataforma(Cima e baixo)
         colTopoPlat = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
         if colTopoPlat:
@@ -221,12 +230,12 @@ class Jogo:
                 #caso não, checa se colidiu com o fundo e regride o pulo
                 self.jogador.vel.y *= -1
             #Colisão com os lados
-            '''if self.jogador.vel.x > 0:
+            if self.jogador.vel.x > 0:
                 self.jogador.pos.x = colTopoPlat[0].rect.left - self.jogador.rect.width
             if self.jogador.vel.x < 0:
                 self.jogador.pos.x = colTopoPlat[0].rect.right - self.jogador.rect.width
             self.jogador.vel.x = 0
-            self.jogador.rect.x = self.jogador.pos.x'''
+            self.jogador.rect.x = self.jogador.pos.x
 
 
         '''if self.jogador.vel.y > 0:
