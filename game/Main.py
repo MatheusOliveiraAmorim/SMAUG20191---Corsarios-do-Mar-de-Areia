@@ -43,7 +43,7 @@ AMARELO = (255,255,0)
 #222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 
 vec = pg.math.Vector2 #inicializa um vetor de 2 dimensões
-ipos = (554.167, 681)
+ipos = (554.167, 681) #posição inicial do jogador
 
 class Jogador(pg.sprite.Sprite):
     def __init__(self, jogo):
@@ -98,12 +98,14 @@ class Jogador(pg.sprite.Sprite):
 #                                                                                            2
 #222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 
-LISTA_PLATAFORMA_TUTO = [(-1280, ALTURA - 40, LARGURA*2, 40),#chão
-                    (-165, 349, 330, 330),#caixa esquerda
-                    (-496, 349, 330, 330), #caixa direita
-                    (-1280, 430, 360, 35), #plataforma canto
-                    (-1280, 250, 180, 35), #degrau
-                    (-1280, -1, 180, 35)] #plataforma porta
+
+
+LISTA_PLATAFORMA_TUTO = [(-1280, ALTURA - 40, LARGURA*2, 40),#chao
+                        (-165, 349, 330, 330),#caixa esquerda
+                        (-496, 349, 330, 330), #caixa direita
+                        (-1280, 200, 360, 35), #plataforma canto
+                        (-1280, 250, 180, 35), #degrau
+                        (-1280, -1, 180, 35)] #plataforma porta
 
 
 #LISTA_PLATAFORMA = [(0, ALTURA - 40, LARGURA, 40),
@@ -122,6 +124,15 @@ class Plataforma(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+class Chao(pg.sprite.Sprite):
+    def __init__(self, x, y, l, a):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.Surface((l, a))
+        self.image.fill(AZUL)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
 class Mapa:
     #def __init__(self, nFase, nQuadrante, filename):
     def __init__(self, nQuadrante):
@@ -131,7 +142,7 @@ class Mapa:
         self.qLargura = LARGURA
         self.MapaAltura = nQuadrante * self.qAltura / 2
         self.MapaLargura = nQuadrante * self.qLargura / 2
-        print(self.MapaAltura, self.MapaLargura)
+        #print(self.MapaAltura, self.MapaLargura)
 
 class Camera:
     def __init__(self, cLargura, cAltura):
@@ -148,14 +159,14 @@ class Camera:
         x = -alvo.rect.x + int(LARGURA/2)
         y = -alvo.rect.y + int(ALTURA/2)
 
-        #limitar câmera
+        '''#limitar câmera
         x = min(0, x)
         x = max(-(self.camLimLarg - LARGURA), x)
         y = min(0, y)
         y = max(-(self.camLimAlt - ALTURA), y)
-        print(x, y)
+        #print(x, y)
         if alvo.vel.x > 0:
-            x += 300
+            x += 400'''
         self.camera = pg.Rect(x, y, self.cLargura, self.cAltura)
 
 
@@ -199,12 +210,38 @@ class Jogo:
     def update(self):
         # Loop´do jogo - atualiza a interface
         self.todos_sprites.update()
-        #Checa se o jogador colidiu com a plataforma(apenas se estiver caindo)
-        if self.jogador.vel.y > 0:
-            colPlat = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
-            if colPlat:
-                self.jogador.pos.y = colPlat[0].rect.top +1
+        #Checa se o jogador colidiu com a plataforma(Cima e baixo)
+        colTopoPlat = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+        if colTopoPlat:
+            if self.jogador.vel.y > 0:
+                #checa se colidiu com o topo
+                self.jogador.pos.y = colTopoPlat[0].rect.top + 1
                 self.jogador.vel.y = 0
+            else:
+                #caso não, checa se colidiu com o fundo e regride o pulo
+                self.jogador.vel.y *= -1
+            #Colisão com os lados
+            '''if self.jogador.vel.x > 0:
+                self.jogador.pos.x = colTopoPlat[0].rect.left - self.jogador.rect.width
+            if self.jogador.vel.x < 0:
+                self.jogador.pos.x = colTopoPlat[0].rect.right - self.jogador.rect.width
+            self.jogador.vel.x = 0
+            self.jogador.rect.x = self.jogador.pos.x'''
+
+
+        '''if self.jogador.vel.y > 0:
+            colTopoPlat = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+            if colTopoPlat:
+                self.jogador.pos.y = colTopoPlat[0].rect.top +1
+                self.jogador.vel.y = 0
+
+        if self.jogador.vel.y < 0:
+            colTopoPlat = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+            if colTopoPlat:
+                self.jogador.pos.y = colTopoPlat[0].rect.bottom +1
+                self.jogador.vel.y = 0'''
+
+
 
         self.camera.update(self.jogador)
         #se jogador chegar em certo ponto da tela
