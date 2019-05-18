@@ -1,8 +1,15 @@
 #opções e variáves imutáveis do jogo
 TITULO = "Corsários do Mar de Areia"
-LARGURA = 480
-ALTURA = 360
+LARGURA = 1280
+ALTURA = 720
 FPS = 60
+
+#Propriedades de jogador
+JOGADOR_ACEL = 0.8
+JOGADOR_FRIC = -0.12
+JOGADOR_GRAV = 0.85
+JOGADOR_PULO = 25
+
 
 #Paleta de cores (VALORES EM RGB)
 BRANCO = (255,255,255)
