@@ -4,10 +4,13 @@ from jogo_config import *
 from c_jogador import *
 from fase import *
 
-
-
-#Arrumar Colisão com os lados:
-#Possível solução: verificar a colisão antes de fazer o movimento
+#TO DO:
+# Dar continuidade a lógica de troca de fase
+# Adicionar inimigos
+# Adicionar golpe e colisão com inimigo
+# ------- Três fases de verificação: colisão, animação, direção que o personagem olha
+# Caixa de texto e diálogo
+# 
 
 class Jogo:
     def __init__(self):
