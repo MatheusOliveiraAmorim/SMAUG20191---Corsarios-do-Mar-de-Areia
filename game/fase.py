@@ -3,6 +3,11 @@ import random
 from jogo_config import *
 from c_jogador import *
 
+
+FASE = 0
+FASE_Q = 0
+    
+
 LISTA_PLATAFORMA_TUTO = [
                         (-234, 349, 330, 330),#caixa esquerda
                         (-566, 349, 330, 330), #caixa direita
@@ -37,32 +42,40 @@ class Chao(pg.sprite.Sprite):
         self.rect.y = y
 
 class Iobjeto(pg.sprite.Sprite):
-    def __init__(self, x, y, l, a):
+    def __init__(self, x, y, l, a, tag):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((l, a))
         self.image.fill(VERMELHO)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.tag = tag
 
 class Mapa:
     #def __init__(self, nFase, nQuadrante, filename):
-    def __init__(self, nQuadrante):
-        #self.nFase = nFase
+    def __init__(self, nFase, nQuadrante):
+        self.nFase = nFase
         self.nQuadrante = nQuadrante
         self.qAltura = ALTURA
         self.qLargura = LARGURA
         self.MapaAltura = nQuadrante * self.qAltura / 2
         self.MapaLargura = nQuadrante * self.qLargura / 2
         #print(self.MapaAltura, self.MapaLargura)
+    
+    def update(self, FASE):
+        if FASE == 0:
+            FASE_Q = 4
+        if FASE == 1:
+            FASE_Q = 6
+
 
 class Camera:
     def __init__(self, cLargura, cAltura):
         self.camera = pg.Rect(0, 0, cLargura, cAltura)
         self.cAltura = cAltura
         self.cLargura = cLargura
-        self.camLimAlt = Mapa(4).MapaAltura
-        self.camLimLarg = Mapa(4).MapaLargura
+        self.camLimAlt = Mapa(FASE, FASE_Q).MapaAltura
+        self.camLimLarg = Mapa(FASE, FASE_Q).MapaLargura
 
     def apply(self, entidade):
         return entidade.rect.move(self.camera.topleft)

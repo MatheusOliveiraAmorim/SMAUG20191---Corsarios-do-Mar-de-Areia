@@ -6,8 +6,8 @@ from fase import *
 
 
 
-#Arrumar Import
-#Arrumar Scroll da tela
+#Arrumar Colisão com os lados:
+#Possível solução: verificar a colisão antes de fazer o movimento
 
 class Jogo:
     def __init__(self):
@@ -21,7 +21,7 @@ class Jogo:
 
     def novo(self):
         # Começa um jogo novo
-        self.mapa = Mapa(4)
+        self.fase = Mapa(FASE, FASE_Q)
         self.todos_sprites = pg.sprite.Group()
         self.plataformas = pg.sprite.Group()
         self.chao = pg.sprite.Group()
@@ -31,14 +31,14 @@ class Jogo:
         c0 = Plataforma(-1280, ALTURA - 40, LARGURA*2, 40)
         self.todos_sprites.add(c0)
         self.chao.add(c0)
-        op = Iobjeto(222, -770, 200, 320)
+        op = Iobjeto(222, -770, 200, 320, "porta-saida-tuto")
         self.todos_sprites.add(op)
         self.iobjeto.add(op)
         for plat in LISTA_PLATAFORMA_TUTO:
             p = Plataforma(*plat)
             self.todos_sprites.add(p)
             self.plataformas.add(p)
-        self.camera = Camera(self.mapa.MapaLargura, self.mapa.MapaAltura)
+        self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
         self.executando()
 
     def executando(self):
@@ -66,16 +66,22 @@ class Jogo:
                 #checa se colidiu com o topo
                 self.jogador.pos.y = colPlat[0].rect.top + 1
                 self.jogador.vel.y = 0
+                seguranca = False
             else:
                 #caso não, checa se colidiu com o fundo e regride o pulo
                 self.jogador.vel.y *= -1
+                seguranca = True
         #Colisão com os lados
-            '''if self.jogador.vel.x > 0:
-                self.jogador.pos.x = colPlat[0].rect.left - self.jogador.rect.width
-            if self.jogador.vel.x < 0:
-                self.jogador.pos.x = colPlat[0].rect.right - self.jogador.rect.width
-            self.jogador.vel.x = 0
-            self.jogador.rect.x = self.jogador.pos.x'''
+            if seguranca:
+                #verifica a variavel de segurança para saber se esta colidindo com y, caso não, ocorre a colisão com x
+                #resetando a posição do jogador antes de colidir com a caixa
+                if self.jogador.vel.x != 0:
+                    self.jogador.pos.x = self.jogador.xAntes
+                self.jogador.vel.x = 0
+            
+        self.fase.update(FASE)
+        if FASE == 1:
+            print("Estou na outra fase")
 
 
 
@@ -120,9 +126,9 @@ class Jogo:
         pass
 
 g = Jogo()
-g.mostra_tela_inicio()
+#g.mostra_tela_inicio()
 while g.rodando:
     g.novo()
-    g.mostra_tela_game_over
+    #g.mostra_tela_game_over
 
 pg.quit()

@@ -1,9 +1,11 @@
 import pygame as pg
 import random
 from jogo_config import *
+from fase import *
 
 vec = pg.math.Vector2 #inicializa um vetor de 2 dimensões
 ipos = (554.167, 681) #posição inicial do jogador
+
 
 class Jogador(pg.sprite.Sprite):
     def __init__(self, jogo):
@@ -19,6 +21,7 @@ class Jogador(pg.sprite.Sprite):
         self.pos = vec(ipos) #utiliza o vetor de 2 posições aqui para armazenar parametros (Posição, velocidade, aceleração)
         self.vel = vec(0,0)
         self.acel = vec(0,0)
+        self.xAntes = 0
 
     def pulo(self):
         #verifica se existe plataforma abaixo antes de pular
@@ -32,11 +35,17 @@ class Jogador(pg.sprite.Sprite):
     def interagir(self):
         colIobj = pg.sprite.spritecollide(self, self.jogo.iobjeto, False)
         if colIobj:
-            print("interagi")
+            for tobj in colIobj:
+                if tobj.tag and tobj.tag == "porta-saida-tuto":
+                    FASE = int(1)
+                    self.jogo.fase.update(FASE)
+                    print(FASE)
+                    print(FASE_Q)
 
     def update(self):
         #Método que verifica a tecla pressionada e movimenta o jogador
         #print(self.pos)
+        self.xAntes = self.pos.x
         self.acel = vec(0, JOGADOR_GRAV)
         tecla = pg.key.get_pressed()
         if tecla[pg.K_LEFT]:
