@@ -21,6 +21,7 @@ class Jogador(pg.sprite.Sprite):
         self.pos = vec(ipos) #utiliza o vetor de 2 posições aqui para armazenar parametros (Posição, velocidade, aceleração)
         self.vel = vec(0,0)
         self.acel = vec(0,0)
+        self.pulando = False
         self.xAntes = 0
 
     def pulo(self):
@@ -31,16 +32,17 @@ class Jogador(pg.sprite.Sprite):
         self.rect.x -= 1
         if colPlat or colChao:
             self.vel.y = -JOGADOR_PULO
+            self.pulando = True
 
     def interagir(self):
         colIobj = pg.sprite.spritecollide(self, self.jogo.iobjeto, False)
         if colIobj:
             for tobj in colIobj:
                 if tobj.tag and tobj.tag == "porta-saida-tuto":
-                    FASE = int(1)
-                    self.jogo.fase.update(FASE)
-                    print(FASE)
-                    print(FASE_Q)
+                    self.jogo.fase.nFase = int(1)
+                    self.jogo.fase.update(self.jogo.fase.nFase)
+                    print(self.jogo.fase.nFase)
+                    print(self.jogo.fase.nQuadrante)
 
     def update(self):
         #Método que verifica a tecla pressionada e movimenta o jogador

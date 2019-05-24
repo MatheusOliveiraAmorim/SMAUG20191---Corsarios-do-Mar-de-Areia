@@ -15,6 +15,9 @@ LISTA_PLATAFORMA_TUTO = [
                         (-505, -315, 300, 35), #degrau
                         (0, -450, 445, 35)] #plataforma porta
 
+LISTA_PLATAFORMA_FASE1 = [
+                        (-234, 349, 330, 330)] #plataforma port
+
 
 #LISTA_PLATAFORMA = [(0, ALTURA - 40, LARGURA, 40),
                     #(LARGURA/2 - 50, ALTURA * 3 / 4, 100, 20),
@@ -62,11 +65,11 @@ class Mapa:
         self.MapaLargura = nQuadrante * self.qLargura / 2
         #print(self.MapaAltura, self.MapaLargura)
     
-    def update(self, FASE):
-        if FASE == 0:
-            FASE_Q = 4
-        if FASE == 1:
-            FASE_Q = 6
+    def update(self, nFase):
+        if self.nFase == 0:
+            self.nQuadrante = 4
+        if self.nFase == 1:
+            self.nQuadrante = 6
 
 
 class Camera:

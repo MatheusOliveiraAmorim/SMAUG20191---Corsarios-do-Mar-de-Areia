@@ -8,7 +8,7 @@ from fase import *
 # Dar continuidade a lógica de troca de fase
 # Adicionar inimigos
 # Adicionar golpe e colisão com inimigo
-# ------- Três fases de verificação: colisão, animação, direção que o personagem olha
+# ------- Três etapas de verificação: colisão, animação, direção que o personagem olha
 # Caixa de texto e diálogo
 # 
 
@@ -75,16 +75,27 @@ class Jogo:
                 self.jogador.vel.y *= -1
                 seguranca = True
         #Colisão com os lados
-            if seguranca:
+            if seguranca and self.jogador.pulando:
                 #verifica a variavel de segurança para saber se esta colidindo com y, caso não, ocorre a colisão com x
                 #resetando a posição do jogador antes de colidir com a caixa
                 if self.jogador.vel.x != 0:
                     self.jogador.pos.x = self.jogador.xAntes
                 self.jogador.vel.x = 0
             
-        self.fase.update(FASE)
-        if FASE == 1:
-            print("Estou na outra fase")
+        '''if self.fase.nFase == 1:
+            ipos = (-2240, 681)
+            c0 = Plataforma(-2560, ALTURA - 40, LARGURA*2, 40)
+            self.todos_sprites.add(c0)
+            self.chao.add(c0)
+            op = Iobjeto(-2560, -770, 200, 320, "porta-ent-tuto")
+            self.todos_sprites.add(op)
+            self.iobjeto.add(op)
+            for plat in LISTA_PLATAFORMA_FASE1:
+                p = Plataforma(*plat)
+                self.todos_sprites.add(p)
+                self.plataformas.add(p)
+            self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
+            self.executando()'''
 
 
 
