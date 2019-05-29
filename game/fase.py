@@ -13,7 +13,8 @@ LISTA_PLATAFORMA_TUTO = [
                         (-566, 349, 330, 330), #caixa direita
                         (-1280, 0, 445, 35), #plataforma canto
                         (-505, -315, 300, 35), #degrau
-                        (0, -450, 445, 35)] #plataforma porta
+                        (0, -450, 445, 35), #plataforma porta
+                        (1280, -500, 400, 1200)] 
 
 LISTA_PLATAFORMA_FASE1 = [
                         (-234, 349, 330, 330)] #plataforma port
@@ -59,6 +60,7 @@ class Mapa:
     def __init__(self, nFase, nQuadrante):
         self.nFase = nFase
         self.nQuadrante = nQuadrante
+        self.filename = filename
         self.qAltura = ALTURA
         self.qLargura = LARGURA
         self.MapaAltura = nQuadrante * self.qAltura / 2
@@ -67,6 +69,7 @@ class Mapa:
     
     def update(self, nFase):
         if self.nFase == 0:
+            pg.image.load(self.filename)
             self.nQuadrante = 4
         if self.nFase == 1:
             self.nQuadrante = 6
@@ -77,8 +80,8 @@ class Camera:
         self.camera = pg.Rect(0, 0, cLargura, cAltura)
         self.cAltura = cAltura
         self.cLargura = cLargura
-        self.camLimAlt = Mapa(FASE, FASE_Q).MapaAltura
-        self.camLimLarg = Mapa(FASE, FASE_Q).MapaLargura
+        self.camLimAlt = Mapa(self.nFase, self.nQuadrante).MapaAltura
+        self.camLimLarg = Mapa(self.nFase, self.nQuadrante).MapaLargura
 
     def apply(self, entidade):
         return entidade.rect.move(self.camera.topleft)

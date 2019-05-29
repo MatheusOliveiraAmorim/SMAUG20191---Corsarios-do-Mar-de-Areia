@@ -21,7 +21,7 @@ class Jogador(pg.sprite.Sprite):
         self.pos = vec(ipos) #utiliza o vetor de 2 posições aqui para armazenar parametros (Posição, velocidade, aceleração)
         self.vel = vec(0,0)
         self.acel = vec(0,0)
-        self.pulando = False
+        #self.pulando = False
         self.xAntes = 0
 
     def pulo(self):
@@ -32,7 +32,7 @@ class Jogador(pg.sprite.Sprite):
         self.rect.x -= 1
         if colPlat or colChao:
             self.vel.y = -JOGADOR_PULO
-            self.pulando = True
+            #self.pulando = False
 
     def interagir(self):
         colIobj = pg.sprite.spritecollide(self, self.jogo.iobjeto, False)

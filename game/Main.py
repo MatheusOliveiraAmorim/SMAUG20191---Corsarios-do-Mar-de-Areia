@@ -12,10 +12,16 @@ from fase import *
 # Caixa de texto e diálogo
 # 
 
+
+pg.init()
+bg0 = pg.image.load('asset/image/bg/f0_bg.jpg')
+
+
+
 class Jogo:
     def __init__(self):
         # Inicializa a tela
-        pg.init()
+        #pg.init()
         pg.mixer.init()
         pg.display.set_caption(TITULO)
         self.janela = pg.display.set_mode((LARGURA, ALTURA))
@@ -38,6 +44,28 @@ class Jogo:
         self.todos_sprites.add(op)
         self.iobjeto.add(op)
         for plat in LISTA_PLATAFORMA_TUTO:
+            p = Plataforma(*plat)
+            self.todos_sprites.add(p)
+            self.plataformas.add(p)
+        self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
+        self.executando()
+    
+    def tfase():
+        self.fase = Mapa(FASE, FASE_Q)
+        self.todos_sprites = pg.sprite.Group()
+        self.plataformas = pg.sprite.Group()
+        self.chao = pg.sprite.Group()
+        self.jogador = Jogador(self)
+        self.iobjeto = pg.sprite.Group()
+        self.todos_sprites.add(self.jogador)
+        pos = (-2240, 681)
+        c0 = Plataforma(-2560, ALTURA - 40, LARGURA*2, 40)
+        self.todos_sprites.add(c0)
+        self.chao.add(c0)
+        op = Iobjeto(-2560, -770, 200, 320, "porta-ent-tuto")
+        self.todos_sprites.add(op)
+        self.iobjeto.add(op)
+        for plat in LISTA_PLATAFORMA_FASE1:
             p = Plataforma(*plat)
             self.todos_sprites.add(p)
             self.plataformas.add(p)
@@ -75,10 +103,10 @@ class Jogo:
                 self.jogador.vel.y *= -1
                 seguranca = True
         #Colisão com os lados
-            if seguranca and self.jogador.pulando:
+            if seguranca:
                 #verifica a variavel de segurança para saber se esta colidindo com y, caso não, ocorre a colisão com x
                 #resetando a posição do jogador antes de colidir com a caixa
-                if self.jogador.vel.x != 0:
+                if self.jogador.vel.x != 0 or self.jogador.pos.y > 0:
                     self.jogador.pos.x = self.jogador.xAntes
                 self.jogador.vel.x = 0
             
@@ -122,6 +150,7 @@ class Jogo:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_z:
                     self.jogador.pulo()
+                    self.jogador.pulando = True
                 if event.key == pg.K_SPACE:
                     self.jogador.interagir()
 
@@ -130,7 +159,7 @@ class Jogo:
         self.janela.fill(PRETO)
         #self.todos_sprites.draw(self.janela)
         for sprite in self.todos_sprites:
-            self.janela.blit(sprite.image, self.camera.apply(sprite))
+            self.janela.blit(bg0, sprite.image, self.camera.apply(sprite))
         pg.display.flip()
 
     def mostra_tela_inicio(self):
@@ -142,7 +171,6 @@ class Jogo:
 g = Jogo()
 #g.mostra_tela_inicio()
 while g.rodando:
-    g.novo()
+        g.novo()
     #g.mostra_tela_game_over
-
 pg.quit()
