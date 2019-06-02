@@ -1,7 +1,4 @@
-
-
-
-#opções e variáves imutáveis do jogo
+#opções e variaves imutaveis do jogo
 TITULO = "Corsários do Mar de Areia"
 LARGURA = 1280
 ALTURA = 720

@@ -1,3 +1,4 @@
+import os
 import pygame as pg
 import random
 from jogo_config import *
@@ -5,75 +6,86 @@ from c_jogador import *
 from fase import *
 
 #TO DO:
-# Dar continuidade a lógica de troca de fase
+# Dar continuidade a logica de troca de fase
 # Adicionar inimigos
-# Adicionar golpe e colisão com inimigo
-# ------- Três etapas de verificação: colisão, animação, direção que o personagem olha
-# Caixa de texto e diálogo
-# 
+# Adicionar golpe e colisao com inimigo
+# ------- Tres etapas de verificacao: colisao, animacao, direcao que o personagem olha
+# Caixa de texto e dialogo
+#
 
 
-pg.init()
-bg0 = pg.image.load('asset/image/bg/f0_bg.jpg')
-
-
+#pg.init()
+#bg0 = pg.image.load(os.path.join("asset/image/bg/f0_bg.jpg")).convert()
 
 class Jogo:
     def __init__(self):
         # Inicializa a tela
-        #pg.init()
+        pg.init()
         pg.mixer.init()
         pg.display.set_caption(TITULO)
         self.janela = pg.display.set_mode((LARGURA, ALTURA))
         self.clock = pg.time.Clock()
         self.rodando = True
-
-    def novo(self):
-        # Começa um jogo novo
-        self.fase = Mapa(FASE, FASE_Q)
         self.todos_sprites = pg.sprite.Group()
-        self.plataformas = pg.sprite.Group()
-        self.chao = pg.sprite.Group()
         self.jogador = Jogador(self)
+        self.chao = pg.sprite.Group()
+        self.plataformas = pg.sprite.Group()
         self.iobjeto = pg.sprite.Group()
+
+    def novo(self, fase):
+        self.todos_sprites.empty()
+        self.chao.empty()
+        self.plataformas.empty()
+
+        # Comeca um jogo novo
+        self.fase = Mapa(FASE, FASE_Q)
+        self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
+
+        self.jogador.set_position(*fase["player"])
         self.todos_sprites.add(self.jogador)
         c0 = Plataforma(-1280, ALTURA - 40, LARGURA*2, 40)
         self.todos_sprites.add(c0)
         self.chao.add(c0)
-        op = Iobjeto(222, -770, 200, 320, "porta-saida-tuto")
-        self.todos_sprites.add(op)
-        self.iobjeto.add(op)
-        for plat in LISTA_PLATAFORMA_TUTO:
+        # op = Iobjeto(222, -770, 200, 320, "porta-saida-tuto")
+        # self.todos_sprites.add(op)
+        # self.iobjeto.add(op)
+
+        for plat in fase["shapes"]:
             p = Plataforma(*plat)
             self.todos_sprites.add(p)
-            self.plataformas.add(p)
-        self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
-        self.executando()
-    
-    def tfase():
-        self.fase = Mapa(FASE, FASE_Q)
-        self.todos_sprites = pg.sprite.Group()
-        self.plataformas = pg.sprite.Group()
-        self.chao = pg.sprite.Group()
-        self.jogador = Jogador(self)
-        self.iobjeto = pg.sprite.Group()
-        self.todos_sprites.add(self.jogador)
-        pos = (-2240, 681)
-        c0 = Plataforma(-2560, ALTURA - 40, LARGURA*2, 40)
-        self.todos_sprites.add(c0)
-        self.chao.add(c0)
-        op = Iobjeto(-2560, -770, 200, 320, "porta-ent-tuto")
-        self.todos_sprites.add(op)
-        self.iobjeto.add(op)
-        for plat in LISTA_PLATAFORMA_FASE1:
-            p = Plataforma(*plat)
-            self.todos_sprites.add(p)
-            self.plataformas.add(p)
-        self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
-        self.executando()
+
+            if p.tag != "":
+                self.iobjeto.add(p)
+            else:
+                self.plataformas.add(p)
+
+        self.update()
+        self.desenhar()
+
+    # def tfase():
+    #     self.fase = Mapa(FASE, FASE_Q)
+    #     self.todos_sprites = pg.sprite.Group()
+    #     self.plataformas = pg.sprite.Group()
+    #     self.chao = pg.sprite.Group()
+    #     self.jogador = Jogador(self)
+    #     self.iobjeto = pg.sprite.Group()
+    #     self.todos_sprites.add(self.jogador)
+    #     pos = (-2240, 681)
+    #     c0 = Plataforma(-2560, ALTURA - 40, LARGURA*2, 40)
+    #     self.todos_sprites.add(c0)
+    #     self.chao.add(c0)
+    #     op = Iobjeto(-2560, -770, 200, 320, "porta-ent-tuto")
+    #     self.todos_sprites.add(op)
+    #     self.iobjeto.add(op)
+    #     for plat in LISTA_PLATAFORMA_FASE1:
+    #         p = Plataforma(*plat)
+    #         self.todos_sprites.add(p)
+    #         self.plataformas.add(p)
+    #     self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
+    #     self.executando()
 
     def executando(self):
-        # Loop´do jogo
+        # Loop do jogo
         self.jogando = True
 
         while self.jogando:
@@ -82,11 +94,12 @@ class Jogo:
             self.update()
             self.desenhar()
 
-
     def update(self):
-        # Loop´do jogo - atualiza a interface
+        # Loop do jogo - atualiza a interface
         self.todos_sprites.update()
+
         colChao = pg.sprite.spritecollide(self.jogador, self.chao, False)
+
         if colChao:
             self.jogador.pos.y = colChao[0].rect.top + 1
             self.jogador.vel.y = 0
@@ -99,17 +112,17 @@ class Jogo:
                 self.jogador.vel.y = 0
                 seguranca = False
             else:
-                #caso não, checa se colidiu com o fundo e regride o pulo
+                #caso nao, checa se colidiu com o fundo e regride o pulo
                 self.jogador.vel.y *= -1
                 seguranca = True
-        #Colisão com os lados
+        #Colisao com os lados
             if seguranca:
-                #verifica a variavel de segurança para saber se esta colidindo com y, caso não, ocorre a colisão com x
-                #resetando a posição do jogador antes de colidir com a caixa
+                #verifica a variavel de seguranca para saber se esta colidindo com y, caso nao, ocorre a colisao com x
+                #resetando a posicao do jogador antes de colidir com a caixa
                 if self.jogador.vel.x != 0 or self.jogador.pos.y > 0:
                     self.jogador.pos.x = self.jogador.xAntes
                 self.jogador.vel.x = 0
-            
+
         '''if self.fase.nFase == 1:
             ipos = (-2240, 681)
             c0 = Plataforma(-2560, ALTURA - 40, LARGURA*2, 40)
@@ -139,7 +152,7 @@ class Jogo:
                 plat.rect.x += abs(self.jogador.vel.x)'''
 
     def eventos(self):
-        # Loop´do jogo - captura de eventos
+        # Loop do jogo - captura de eventos
         for event in pg.event.get():
             #Verifica se a janela foi fechada
             if event.type == pg.QUIT:
@@ -155,11 +168,11 @@ class Jogo:
                     self.jogador.interagir()
 
     def desenhar(self):
-        # Loop´do jogo - desenha a tela
+        # Loop do jogo - desenha a tela
         self.janela.fill(PRETO)
         #self.todos_sprites.draw(self.janela)
         for sprite in self.todos_sprites:
-            self.janela.blit(bg0, sprite.image, self.camera.apply(sprite))
+            self.janela.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
 
     def mostra_tela_inicio(self):
@@ -169,8 +182,10 @@ class Jogo:
         pass
 
 g = Jogo()
+g.novo(LISTA_PLATAFORMA_TUTO)
+
 #g.mostra_tela_inicio()
 while g.rodando:
-        g.novo()
+    g.executando()
     #g.mostra_tela_game_over
 pg.quit()

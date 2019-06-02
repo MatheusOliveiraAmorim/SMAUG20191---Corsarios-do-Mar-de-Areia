@@ -6,18 +6,28 @@ from c_jogador import *
 
 FASE = 0
 FASE_Q = 0
-    
 
-LISTA_PLATAFORMA_TUTO = [
-                        (-234, 349, 330, 330),#caixa esquerda
-                        (-566, 349, 330, 330), #caixa direita
-                        (-1280, 0, 445, 35), #plataforma canto
-                        (-505, -315, 300, 35), #degrau
-                        (0, -450, 445, 35), #plataforma porta
-                        (1280, -500, 400, 1200)] 
 
-LISTA_PLATAFORMA_FASE1 = [
-                        (-234, 349, 330, 330)] #plataforma port
+LISTA_PLATAFORMA_TUTO = {
+    "player": (554.167, 681),
+    "shapes": [
+        (-234, 349, 330, 330),#caixa esquerda
+        (-566, 349, 330, 330), #caixa direita
+        (-1280, 0, 445, 35), #plataforma canto
+        (-505, -315, 300, 35), #degrau
+        (0, -450, 445, 35), #plataforma porta
+        (1280, -500, 400, 1200),
+        (222, -770, 200, 320, "porta-saida")
+    ]
+}
+
+LISTA_PLATAFORMA_FASE1 = {
+    "player": (-1250, 349),
+    "shapes": [(-1280, 349, 200, 320,  "porta-entrada"),
+    (-234, 18, 330, 330),
+    (-234, 349, 330, 330),
+    (-566, 349, 330, 330)]
+}
 
 
 #LISTA_PLATAFORMA = [(0, ALTURA - 40, LARGURA, 40),
@@ -27,16 +37,25 @@ LISTA_PLATAFORMA_FASE1 = [
                     #(175, 100, 50, 20),
                     #(175, 100, 50, 20)]
 
-class Plataforma(pg.sprite.Sprite):
-    def __init__(self, x, y, l, a):
+class Plataforma(pg.sprite.DirtySprite):
+    def __init__(self, x, y, l, a, tag=""):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((l, a))
-        self.image.fill(VERDE)
+
+        if tag == "":
+            self.image.fill(VERDE)
+        elif tag == "porta-saida":
+            self.image.fill(VERMELHO)
+        elif tag == "porta-entrada":
+            self.image.fill(AZUL)
+
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        self.tag = tag
+        self.layer = 10
 
-class Chao(pg.sprite.Sprite):
+class Chao(pg.sprite.DirtySprite):
     def __init__(self, x, y, l, a):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((l, a))
@@ -44,29 +63,20 @@ class Chao(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
-class Iobjeto(pg.sprite.Sprite):
-    def __init__(self, x, y, l, a, tag):
-        pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((l, a))
-        self.image.fill(VERMELHO)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.tag = tag
+        self.layer = 10
 
 class Mapa:
     #def __init__(self, nFase, nQuadrante, filename):
     def __init__(self, nFase, nQuadrante):
         self.nFase = nFase
         self.nQuadrante = nQuadrante
-        self.filename = filename
+        #self.filename = filename
         self.qAltura = ALTURA
         self.qLargura = LARGURA
         self.MapaAltura = nQuadrante * self.qAltura / 2
         self.MapaLargura = nQuadrante * self.qLargura / 2
         #print(self.MapaAltura, self.MapaLargura)
-    
+
     def update(self, nFase):
         if self.nFase == 0:
             pg.image.load(self.filename)
@@ -80,8 +90,8 @@ class Camera:
         self.camera = pg.Rect(0, 0, cLargura, cAltura)
         self.cAltura = cAltura
         self.cLargura = cLargura
-        self.camLimAlt = Mapa(self.nFase, self.nQuadrante).MapaAltura
-        self.camLimLarg = Mapa(self.nFase, self.nQuadrante).MapaLargura
+        self.camLimAlt = Mapa(FASE, FASE_Q).MapaAltura
+        self.camLimLarg = Mapa(FASE, FASE_Q).MapaLargura
 
     def apply(self, entidade):
         return entidade.rect.move(self.camera.topleft)
