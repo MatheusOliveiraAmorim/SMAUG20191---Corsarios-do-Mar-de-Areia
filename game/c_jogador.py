@@ -5,14 +5,13 @@ from fase import *
 
 vec = pg.math.Vector2 #inicializa um vetor de 2 dimensões
 
-
 class Jogador(pg.sprite.Sprite):
     def __init__(self, jogo):
         #Classe com os atributos do jogador
         pg.sprite.Sprite.__init__(self)
         #Passando o atributo jogo para o jogador ele toma conhecimento de todos os objetos(self) no codigo, assim esses podem ser usados como referencia
         self.jogo = jogo
-        self.image = pg.Surface((200, 320))
+        self.image = char_r
         #self.image.fill(AMARELO)
         self.rect = self.image.get_rect()
         self.rect.center = (ALTURA/2, LARGURA/2)
@@ -29,6 +28,7 @@ class Jogador(pg.sprite.Sprite):
         self.facingRight = False
         self.facingLeft = False
         self.walkCount = 0
+        self.updated_at = 0
 
     def set_position(self, x, y):
         self.pos = vec(x, y)
@@ -59,19 +59,28 @@ class Jogador(pg.sprite.Sprite):
                     print(self.jogo.fase.nQuadrante)
 
     def draw (self, win):
+        now = pg.time.get_ticks() / 1000
+        delay = .1
+
         if self.walkCount + 1 >= 4:
             self.walkCount = 0
         if self.Aleft:
-            win.blit(walkLeft[self.walkCount], (self.pos))
-            self.walkCount += 1
+            if (now - self.updated_at > delay):
+                self.image = walkLeft[self.walkCount]
+                self.updated_at = now
+                self.walkCount += 1
+            # win.blit(walkLeft[self.walkCount], (self.pos))
         elif self.Aright:
-            win.blit(walkRight[self.walkCount], (self.pos))
-            self.walkCount += 1
+            if (now - self.updated_at > delay):
+                self.image = walkRight[self.walkCount]
+                self.updated_at = now
+                self.walkCount += 1
+            # win.blit(walkRight[self.walkCount], (self.pos))
         else:
             if self.Pleft:
-                win.blit(char_l, (self.pos))
+                self.image = char_l
             if self.Pright:
-                win.blit(char_r, (self.pos))
+                self.image = char_r
 
     def update(self):
         #Método que verifica a tecla pressionada e movimenta o jogador

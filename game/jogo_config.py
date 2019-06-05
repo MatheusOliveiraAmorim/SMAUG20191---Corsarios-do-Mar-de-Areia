@@ -1,3 +1,4 @@
+import os
 import pygame as pg
 
 #opções e variaves imutaveis do jogo
@@ -14,14 +15,16 @@ JOGADOR_PULO = 25
 
 #C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char
 
-char_r = pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_idle_right.png')
-char_l = pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_idle_left.png')
+dirname = os.path.dirname(__file__)
 
-walkRight = [pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_right_01.png'), pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_right_02.png'),
-             pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_right_03.png'), pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_right_04.png')]
+char_r = pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_idle_right.png'))
+char_l = pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_idle_left.png'))
 
-walkLeft = [pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_left_01.png'), pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_left_03.png'),
-            pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_left_02.png'), pg.image.load('C:/Users/Matheus/PycharmProjects/SMAUG20191---Corsarios-do-Mar-de-Areia/game/asset/image/char/pnp_left_04.png')]
+walkRight = [pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_right_01.png')), pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_right_02.png')),
+             pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_right_03.png')), pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_right_04.png'))]
+
+walkLeft = [pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_01.png')), pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_03.png')),
+            pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_02.png')), pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_04.png'))]
 
 # char_r = pg.image.load('asset\image\char\pnp_idle_right.png')
 # char_l = pg.image.load('asset\image\char\pnp_idle_left.png')
