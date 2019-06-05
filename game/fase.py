@@ -21,6 +21,19 @@ LISTA_PLATAFORMA_TUTO = {
     ]
 }
 
+LISTA_PLATAFORMA_TUTO_2 = {
+    "player": (222, -770),
+    "shapes": [
+        (-234, 349, 330, 330),#caixa esquerda
+        (-566, 349, 330, 330), #caixa direita
+        (-1280, 0, 445, 35), #plataforma canto
+        (-505, -315, 300, 35), #degrau
+        (0, -450, 445, 35), #plataforma porta
+        (1280, -500, 400, 1200),
+        (222, -770, 200, 320, "porta-saida")
+    ]
+}
+
 LISTA_PLATAFORMA_FASE1 = {
     "player": (-1250, 349),
     "shapes": [(-1280, 349, 200, 320,  "porta-entrada"),

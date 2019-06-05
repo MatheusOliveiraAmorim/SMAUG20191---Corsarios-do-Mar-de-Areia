@@ -123,21 +123,6 @@ class Jogo:
                     self.jogador.pos.x = self.jogador.xAntes
                 self.jogador.vel.x = 0
 
-        '''if self.fase.nFase == 1:
-            ipos = (-2240, 681)
-            c0 = Plataforma(-2560, ALTURA - 40, LARGURA*2, 40)
-            self.todos_sprites.add(c0)
-            self.chao.add(c0)
-            op = Iobjeto(-2560, -770, 200, 320, "porta-ent-tuto")
-            self.todos_sprites.add(op)
-            self.iobjeto.add(op)
-            for plat in LISTA_PLATAFORMA_FASE1:
-                p = Plataforma(*plat)
-                self.todos_sprites.add(p)
-                self.plataformas.add(p)
-            self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
-            self.executando()'''
-
 
 
         self.camera.update(self.jogador)
@@ -169,11 +154,13 @@ class Jogo:
 
     def desenhar(self):
         # Loop do jogo - desenha a tela
-        self.janela.fill(PRETO)
+        self.janela.fill(BRANCO)
+        self.jogador.draw(self.janela)
         #self.todos_sprites.draw(self.janela)
         for sprite in self.todos_sprites:
             self.janela.blit(sprite.image, self.camera.apply(sprite))
-        pg.display.flip()
+        #pg.display.flip()
+        pg.display.update()
 
     def mostra_tela_inicio(self):
         pass

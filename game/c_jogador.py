@@ -5,6 +5,7 @@ from fase import *
 
 vec = pg.math.Vector2 #inicializa um vetor de 2 dimensões
 
+
 class Jogador(pg.sprite.Sprite):
     def __init__(self, jogo):
         #Classe com os atributos do jogador
@@ -12,7 +13,7 @@ class Jogador(pg.sprite.Sprite):
         #Passando o atributo jogo para o jogador ele toma conhecimento de todos os objetos(self) no codigo, assim esses podem ser usados como referencia
         self.jogo = jogo
         self.image = pg.Surface((200, 320))
-        self.image.fill(AMARELO)
+        #self.image.fill(AMARELO)
         self.rect = self.image.get_rect()
         self.rect.center = (ALTURA/2, LARGURA/2)
         #self.pos = vec(LARGURA/2, ALTURA/2) #utiliza o vetor de 2 posições aqui para armazenar parametros (Posicao, velocidade, aceleracao)
@@ -21,7 +22,14 @@ class Jogador(pg.sprite.Sprite):
         self.acel = vec(0,0)
         #self.pulando = False
         self.xAntes = 0
-    
+        self.Aleft = False
+        self.Aright = False
+        self.Pleft = False
+        self.Pright = False
+        self.facingRight = False
+        self.facingLeft = False
+        self.walkCount = 0
+
     def set_position(self, x, y):
         self.pos = vec(x, y)
 
@@ -44,6 +52,26 @@ class Jogador(pg.sprite.Sprite):
                     self.jogo.novo(LISTA_PLATAFORMA_FASE1)
                     print(self.jogo.fase.nFase)
                     print(self.jogo.fase.nQuadrante)
+                if tobj.tag and tobj.tag == "porta-entrada":
+                    self.jogo.fase.nFase = int(1)
+                    self.jogo.novo(LISTA_PLATAFORMA_TUTO_2)
+                    print(self.jogo.fase.nFase)
+                    print(self.jogo.fase.nQuadrante)
+
+    def draw (self, win):
+        if self.walkCount + 1 >= 4:
+            self.walkCount = 0
+        if self.Aleft:
+            win.blit(walkLeft[self.walkCount], (self.pos))
+            self.walkCount += 1
+        elif self.Aright:
+            win.blit(walkRight[self.walkCount], (self.pos))
+            self.walkCount += 1
+        else:
+            if self.Pleft:
+                win.blit(char_l, (self.pos))
+            if self.Pright:
+                win.blit(char_r, (self.pos))
 
     def update(self):
         #Método que verifica a tecla pressionada e movimenta o jogador
@@ -51,10 +79,53 @@ class Jogador(pg.sprite.Sprite):
         self.xAntes = self.pos.x
         self.acel = vec(0, JOGADOR_GRAV)
         tecla = pg.key.get_pressed()
+
         if tecla[pg.K_LEFT]:
+
             self.acel.x = -JOGADOR_ACEL
+
+            self.Aleft = True
+            self.Aright = False
+
+            self.Pleft = False
+            self.Pright = False
+
+            self.facingRight = False
+            self.facingLeft = True
+
         if tecla[pg.K_RIGHT]:
+
             self.acel.x = JOGADOR_ACEL
+
+            self.Aleft = False
+            self.Aright = True
+
+            self.Pleft = False
+            self.Pright = False
+
+            self.facingRight = True
+            self.facingLeft = False
+            
+        if not tecla[pg.K_RIGHT] and self.facingRight:
+
+            self.Pleft = False
+            self.Pright = True
+
+            self.Aleft = False
+            self.Aright = False
+
+            self.walkCount = 0
+
+        if not tecla[pg.K_LEFT] and self.facingLeft:
+
+            self.Pleft = True
+            self.Pright = False
+
+            self.Aleft = False
+            self.Aright = False
+
+            self.walkCount = 0
+
 
         #Adiciona coeficiente de fricção a equação de movimento para estabilizar o movimento do jogador
         self.acel.x += self.vel.x * JOGADOR_FRIC
