@@ -87,6 +87,7 @@ class Jogo:
     def executando(self):
         # Loop do jogo
         self.jogando = True
+        pg.mixer.music.load(os.path.join(os.path.dirname(__file__), "asset/sound/music/music.mp3"))
 
         while self.jogando:
             self.clock.tick(FPS)

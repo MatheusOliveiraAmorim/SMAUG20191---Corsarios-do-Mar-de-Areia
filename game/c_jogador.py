@@ -29,6 +29,7 @@ class Jogador(pg.sprite.Sprite):
         self.facingLeft = False
         self.walkCount = 0
         self.updated_at = 0
+        self.is_song_paused = True
 
     def set_position(self, x, y):
         self.pos = vec(x, y)
@@ -82,6 +83,20 @@ class Jogador(pg.sprite.Sprite):
             if self.Pright:
                 self.image = char_r
 
+    def play_music(self):
+        if self.is_song_paused:
+            if pg.mixer.music.get_pos() == -1:
+                pg.mixer.music.play()
+            else:
+                pg.mixer.music.unpause()
+
+            self.is_song_paused = False
+
+    def stop_music(self):
+        if not self.is_song_paused:
+            pg.mixer.music.pause()
+            self.is_song_paused = True
+
     def update(self):
         #Método que verifica a tecla pressionada e movimenta o jogador
         #print(self.pos)
@@ -90,6 +105,7 @@ class Jogador(pg.sprite.Sprite):
         tecla = pg.key.get_pressed()
 
         if tecla[pg.K_LEFT]:
+            self.play_music()
 
             self.acel.x = -JOGADOR_ACEL
 
@@ -103,6 +119,7 @@ class Jogador(pg.sprite.Sprite):
             self.facingLeft = True
 
         if tecla[pg.K_RIGHT]:
+            self.play_music()
 
             self.acel.x = JOGADOR_ACEL
 
@@ -114,9 +131,11 @@ class Jogador(pg.sprite.Sprite):
 
             self.facingRight = True
             self.facingLeft = False
-            
-        if not tecla[pg.K_RIGHT] and self.facingRight:
+        
+        if not tecla[pg.K_RIGHT] and not tecla[pg.K_LEFT]:
+            self.stop_music()
 
+        if not tecla[pg.K_RIGHT] and self.facingRight:
             self.Pleft = False
             self.Pright = True
 
@@ -126,7 +145,6 @@ class Jogador(pg.sprite.Sprite):
             self.walkCount = 0
 
         if not tecla[pg.K_LEFT] and self.facingLeft:
-
             self.Pleft = True
             self.Pright = False
 
