@@ -26,15 +26,6 @@ walkRight = [pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_right_01.
 walkLeft = [pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_01.png')), pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_03.png')),
             pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_02.png')), pg.image.load(os.path.join(dirname, 'asset/image/char/pnp_left_04.png'))]
 
-# char_r = pg.image.load('asset\image\char\pnp_idle_right.png')
-# char_l = pg.image.load('asset\image\char\pnp_idle_left.png')
-
-# walkRight = [pg.image.load('asset\image\char\pnp_right_01.png'), pg.image.load('asset\image\char\pnp_right_02.png'),
-#              pg.image.load('asset\image\char\pnp_right_03.png'), pg.image.load('asset\image\char\pnp_right_04.png')]
-
-# walkLeft = [pg.image.load('asset\image\char\pnp_left_01.png'), pg.image.load('asset\image\char\pnp_left_03.png'),
-#             pg.image.load('asset\image\char\pnp_left_02.png'), pg.image.load('asset\image\char\pnp_left_04.png')]
-
 #Paleta de cores (VALORES EM RGB)
 BRANCO = (255,255,255)
 PRETO = (0,0,0)

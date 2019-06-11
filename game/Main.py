@@ -3,19 +3,15 @@ import pygame as pg
 import random
 from jogo_config import *
 from c_jogador import *
+from c_inimigo import *
 from fase import *
 
 #TO DO:
-# Dar continuidade a logica de troca de fase
 # Adicionar inimigos
 # Adicionar golpe e colisao com inimigo
 # ------- Tres etapas de verificacao: colisao, animacao, direcao que o personagem olha
 # Caixa de texto e dialogo
 #
-
-
-#pg.init()
-#bg0 = pg.image.load(os.path.join("asset/image/bg/f0_bg.jpg")).convert()
 
 class Jogo:
     def __init__(self):
@@ -28,9 +24,12 @@ class Jogo:
         self.rodando = True
         self.todos_sprites = pg.sprite.Group()
         self.jogador = Jogador(self)
+        self.inimigo = Inimigo(self)
         self.chao = pg.sprite.Group()
         self.plataformas = pg.sprite.Group()
         self.iobjeto = pg.sprite.Group()
+        self.tiros = pg.sprite.Group()
+        self.tiros_jogador = pg.sprite.Group()
 
     def novo(self, fase):
         self.todos_sprites.empty()
@@ -44,11 +43,15 @@ class Jogo:
         self.jogador.set_position(*fase["player"])
         self.todos_sprites.add(self.jogador)
         c0 = Plataforma(-1280, ALTURA - 40, LARGURA*2, 40)
+
+        enemyPos = fase.get("enemy", -1)
+
+        if enemyPos != -1:
+            self.inimigo.set_position(*enemyPos)
+            self.todos_sprites.add(self.inimigo)
+
         self.todos_sprites.add(c0)
         self.chao.add(c0)
-        # op = Iobjeto(222, -770, 200, 320, "porta-saida-tuto")
-        # self.todos_sprites.add(op)
-        # self.iobjeto.add(op)
 
         for plat in fase["shapes"]:
             p = Plataforma(*plat)
@@ -61,28 +64,6 @@ class Jogo:
 
         self.update()
         self.desenhar()
-
-    # def tfase():
-    #     self.fase = Mapa(FASE, FASE_Q)
-    #     self.todos_sprites = pg.sprite.Group()
-    #     self.plataformas = pg.sprite.Group()
-    #     self.chao = pg.sprite.Group()
-    #     self.jogador = Jogador(self)
-    #     self.iobjeto = pg.sprite.Group()
-    #     self.todos_sprites.add(self.jogador)
-    #     pos = (-2240, 681)
-    #     c0 = Plataforma(-2560, ALTURA - 40, LARGURA*2, 40)
-    #     self.todos_sprites.add(c0)
-    #     self.chao.add(c0)
-    #     op = Iobjeto(-2560, -770, 200, 320, "porta-ent-tuto")
-    #     self.todos_sprites.add(op)
-    #     self.iobjeto.add(op)
-    #     for plat in LISTA_PLATAFORMA_FASE1:
-    #         p = Plataforma(*plat)
-    #         self.todos_sprites.add(p)
-    #         self.plataformas.add(p)
-    #     self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
-    #     self.executando()
 
     def executando(self):
         # Loop do jogo
@@ -100,12 +81,13 @@ class Jogo:
         self.todos_sprites.update()
 
         colChao = pg.sprite.spritecollide(self.jogador, self.chao, False)
+        colPlat = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+        colPlatInimigo = pg.sprite.spritecollide(self.inimigo, self.plataformas, False)
 
         if colChao:
             self.jogador.pos.y = colChao[0].rect.top + 1
             self.jogador.vel.y = 0
         #Checa se o jogador colidiu com a plataforma(Cima e baixo)
-        colPlat = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
         if colPlat:
             if self.jogador.vel.y > 0:
                 #checa se colidiu com o topo
@@ -123,6 +105,13 @@ class Jogo:
                 if self.jogador.vel.x != 0 or self.jogador.pos.y > 0:
                     self.jogador.pos.x = self.jogador.xAntes
                 self.jogador.vel.x = 0
+
+        if colPlatInimigo:
+            if self.inimigo.vel.y > 0:
+                self.inimigo.pos.y = colPlatInimigo[0].rect.top + 1
+                self.inimigo.vel.y = 0
+            else:
+                self.inimigo.vel.y *= -1
 
 
 
@@ -152,11 +141,15 @@ class Jogo:
                     self.jogador.pulando = True
                 if event.key == pg.K_SPACE:
                     self.jogador.interagir()
+                if event.key == pg.K_x:
+                    self.jogador.atirar()
 
     def desenhar(self):
         # Loop do jogo - desenha a tela
         self.janela.fill(BRANCO)
-        self.jogador.draw(self.janela)
+        self.janela.blit(bg, (-1280,-720))
+        self.jogador.draw()
+        self.inimigo.draw()
         #self.todos_sprites.draw(self.janela)
         for sprite in self.todos_sprites:
             self.janela.blit(sprite.image, self.camera.apply(sprite))

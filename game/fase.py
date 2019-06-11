@@ -1,3 +1,4 @@
+import os
 import pygame as pg
 import random
 from jogo_config import *
@@ -7,9 +8,14 @@ from c_jogador import *
 FASE = 0
 FASE_Q = 0
 
+dirname = os.path.dirname(__file__)
+
+bg = pg.image.load(os.path.join(dirname, 'asset/image/bg/f0_bg.jpg'))
+
 
 LISTA_PLATAFORMA_TUTO = {
     "player": (554.167, 681),
+    "enemy": (530, 681),
     "shapes": [
         (-234, 349, 330, 330),#caixa esquerda
         (-566, 349, 330, 330), #caixa direita
@@ -42,13 +48,6 @@ LISTA_PLATAFORMA_FASE1 = {
     (-566, 349, 330, 330)]
 }
 
-
-#LISTA_PLATAFORMA = [(0, ALTURA - 40, LARGURA, 40),
-                    #(LARGURA/2 - 50, ALTURA * 3 / 4, 100, 20),
-                    #(125, ALTURA - 350, 100, 20),
-                    #(50, 90, 60, 10),
-                    #(175, 100, 50, 20),
-                    #(175, 100, 50, 20)]
 
 class Plataforma(pg.sprite.DirtySprite):
     def __init__(self, x, y, l, a, tag=""):

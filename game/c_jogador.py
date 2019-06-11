@@ -2,6 +2,7 @@ import pygame as pg
 import random
 from jogo_config import *
 from fase import *
+from c_tiro import *
 
 vec = pg.math.Vector2 #inicializa um vetor de 2 dimensões
 
@@ -30,6 +31,7 @@ class Jogador(pg.sprite.Sprite):
         self.walkCount = 0
         self.updated_at = 0
         self.is_song_paused = True
+        self.vida = 30
 
     def set_position(self, x, y):
         self.pos = vec(x, y)
@@ -59,7 +61,7 @@ class Jogador(pg.sprite.Sprite):
                     print(self.jogo.fase.nFase)
                     print(self.jogo.fase.nQuadrante)
 
-    def draw (self, win):
+    def draw (self):
         now = pg.time.get_ticks() / 1000
         delay = .1
 
@@ -70,13 +72,11 @@ class Jogador(pg.sprite.Sprite):
                 self.image = walkLeft[self.walkCount]
                 self.updated_at = now
                 self.walkCount += 1
-            # win.blit(walkLeft[self.walkCount], (self.pos))
         elif self.Aright:
             if (now - self.updated_at > delay):
                 self.image = walkRight[self.walkCount]
                 self.updated_at = now
                 self.walkCount += 1
-            # win.blit(walkRight[self.walkCount], (self.pos))
         else:
             if self.Pleft:
                 self.image = char_l
@@ -84,11 +84,11 @@ class Jogador(pg.sprite.Sprite):
                 self.image = char_r
 
     def play_music(self):
-        if self.is_song_paused:
-            if pg.mixer.music.get_pos() == -1:
-                pg.mixer.music.play()
-            else:
-                pg.mixer.music.unpause()
+        # if self.is_song_paused:
+        #     if pg.mixer.music.get_pos() == -1:
+        #         pg.mixer.music.play()
+        #     else:
+        #         pg.mixer.music.unpause()
 
             self.is_song_paused = False
 
@@ -97,12 +97,31 @@ class Jogador(pg.sprite.Sprite):
             pg.mixer.music.pause()
             self.is_song_paused = True
 
+    def colisao(self):
+        tiroColidido = pg.sprite.spritecollideany(self, self.jogo.tiros, False)
+
+        if tiroColidido:
+            self.vida -= 10
+            tiroColidido.kill()
+
+        if self.vida <= 0:
+            self.kill()
+
+    def atirar(self):
+        direcao = "left" if self.facingLeft == True else "right"
+        tiro = Tiro(vec(self.pos.x, self.pos.y - 150), direcao)
+
+        self.jogo.todos_sprites.add(tiro)
+        self.jogo.tiros_jogador.add(tiro)
+
     def update(self):
         #Método que verifica a tecla pressionada e movimenta o jogador
         #print(self.pos)
         self.xAntes = self.pos.x
         self.acel = vec(0, JOGADOR_GRAV)
         tecla = pg.key.get_pressed()
+
+        self.colisao()
 
         if tecla[pg.K_LEFT]:
             self.play_music()
@@ -131,7 +150,7 @@ class Jogador(pg.sprite.Sprite):
 
             self.facingRight = True
             self.facingLeft = False
-        
+
         if not tecla[pg.K_RIGHT] and not tecla[pg.K_LEFT]:
             self.stop_music()
 
@@ -152,7 +171,6 @@ class Jogador(pg.sprite.Sprite):
             self.Aright = False
 
             self.walkCount = 0
-
 
         #Adiciona coeficiente de fricção a equação de movimento para estabilizar o movimento do jogador
         self.acel.x += self.vel.x * JOGADOR_FRIC
