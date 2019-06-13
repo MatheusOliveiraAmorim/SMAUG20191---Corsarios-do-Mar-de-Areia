@@ -4,7 +4,7 @@ import random
 from jogo_config import *
 from c_jogador import *
 
-
+#(554.167, 681)
 FASE = 0
 FASE_Q = 0
 
@@ -15,37 +15,45 @@ bg = pg.image.load(os.path.join(dirname, 'asset/image/bg/f0_bg.jpg'))
 
 LISTA_PLATAFORMA_TUTO = {
     "player": (554.167, 681),
-    "enemy": (530, 681),
     "shapes": [
         (-234, 349, 330, 330),#caixa esquerda
         (-566, 349, 330, 330), #caixa direita
         (-1280, 0, 445, 35), #plataforma canto
         (-505, -315, 300, 35), #degrau
         (0, -450, 445, 35), #plataforma porta
-        (1280, -500, 400, 1200),
+        (1280, -500, 400, 1200), #Parede direita down
+        (450, -959, 1200, 950), #Parede direita up
+        (-1685, -1000, 400, 1690), #Parede esquerda
+        (-1280, -1000, LARGURA*2, 40), #teto
         (222, -770, 200, 320, "porta-saida")
     ]
 }
 
 LISTA_PLATAFORMA_TUTO_2 = {
-    "player": (222, -770),
+    "player": (222, -450),
     "shapes": [
         (-234, 349, 330, 330),#caixa esquerda
         (-566, 349, 330, 330), #caixa direita
         (-1280, 0, 445, 35), #plataforma canto
         (-505, -315, 300, 35), #degrau
         (0, -450, 445, 35), #plataforma porta
-        (1280, -500, 400, 1200),
+        (1280, -500, 400, 1200), #Parede direita down
+        (450, -959, 1200, 950), #Parede direita up
+        (-1685, -1000, 400, 1690), #Parede esquerda
+        (-1280, -1000, LARGURA*2, 40), #teto
         (222, -770, 200, 320, "porta-saida")
     ]
 }
 
 LISTA_PLATAFORMA_FASE1 = {
-    "player": (-1250, 349),
-    "shapes": [(-1280, 349, 200, 320,  "porta-entrada"),
+    "player": (-1100, 675),
+    "enemy": (554.167, 681),
+    "shapes": [(-1280, 359, 200, 320,  "porta-entrada"),
     (-234, 18, 330, 330),
     (-234, 349, 330, 330),
-    (-566, 349, 330, 330)]
+    (-566, 349, 330, 330),
+    (-1685, -1000, 400, 1690)
+    ]
 }
 
 
