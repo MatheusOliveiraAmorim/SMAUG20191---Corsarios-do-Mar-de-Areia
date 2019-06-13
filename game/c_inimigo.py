@@ -13,7 +13,7 @@ class Inimigo(pg.sprite.Sprite):
         #Classe com os atributos do jogador
         pg.sprite.Sprite.__init__(self)
         #Passando o atributo jogo para o jogador ele toma conhecimento de todos os objetos(self) no codigo, assim esses podem ser usados como referencia
-        self.image = char_r
+        self.image = enemy_l
         self.jogo = jogo
         #self.image.fill(AMARELO)
         self.pos = vec(0, 0)
@@ -22,8 +22,8 @@ class Inimigo(pg.sprite.Sprite):
         self.vel = vec(0,0)
         self.acel = vec(0, 0)
         self.xAntes = 0
-        self.facingRight = True
-        self.facingLeft = False
+        self.facingRight = False
+        self.facingLeft = True
         self.shot_at = 0
         self.jumped_at = 0
         self.vida = 30

@@ -16,8 +16,8 @@ bg = pg.image.load(os.path.join(dirname, 'asset/image/bg/f0_bg.jpg'))
 LISTA_PLATAFORMA_TUTO = {
     "player": (554.167, 681),
     "shapes": [
-        (-234, 349, 330, 330),#caixa esquerda
-        (-566, 349, 330, 330), #caixa direita
+        (-234, 349, 330, 330, "caixa"),#caixa esquerda
+        (-566, 349, 330, 330, "caixa"), #caixa direita
         (-1280, 0, 445, 35), #plataforma canto
         (-505, -315, 300, 35), #degrau
         (0, -450, 445, 35), #plataforma porta
@@ -32,11 +32,11 @@ LISTA_PLATAFORMA_TUTO = {
 LISTA_PLATAFORMA_TUTO_2 = {
     "player": (222, -450),
     "shapes": [
-        (-234, 349, 330, 330),#caixa esquerda
-        (-566, 349, 330, 330), #caixa direita
-        (-1280, 0, 445, 35), #plataforma canto
-        (-505, -315, 300, 35), #degrau
-        (0, -450, 445, 35), #plataforma porta
+        (-234, 349, 330, 330, "caixa"),#caixa esquerda
+        (-566, 349, 330, 330, "caixa"), #caixa direita
+        (-1280, 0, 445, 35, "plataforma"), #plataforma canto
+        (-505, -315, 300, 35, "plataforma"), #degrau
+        (0, -450, 445, 35, "plataforma"), #plataforma porta
         (1280, -500, 400, 1200), #Parede direita down
         (450, -959, 1200, 950), #Parede direita up
         (-1685, -1000, 400, 1690), #Parede esquerda
@@ -47,33 +47,32 @@ LISTA_PLATAFORMA_TUTO_2 = {
 
 LISTA_PLATAFORMA_FASE1 = {
     "player": (-1100, 675),
-    "enemy": (554.167, 681),
-    "shapes": [(-1280, 359, 200, 320,  "porta-entrada"),
-    (-234, 18, 330, 330),
-    (-234, 349, 330, 330),
-    (-566, 349, 330, 330),
+    "enemy": (900, 681),
+    "shapes": [(-1280, 359, 200, 320, "porta-entrada"),
+    (-234, 18, 330, 330, "caixa"),
+    (-234, 349, 330, 330, "caixa"),
+    (-566, 349, 330, 330, "caixa"),
     (-1685, -1000, 400, 1690)
     ]
 }
 
 
-class Plataforma(pg.sprite.DirtySprite):
+class Plataforma(pg.sprite.Sprite):
     def __init__(self, x, y, l, a, tag=""):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.Surface((l, a))
 
         if tag == "":
             self.image.fill(VERDE)
-        elif tag == "porta-saida":
-            self.image.fill(VERMELHO)
-        elif tag == "porta-entrada":
-            self.image.fill(AZUL)
+        elif tag == "porta-saida" or tag == "porta-entrada":
+            self.image = scn_porta
+        elif tag == "caixa":
+            self.image = scn_caixa
 
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.tag = tag
-        self.layer = 10
 
 class Chao(pg.sprite.DirtySprite):
     def __init__(self, x, y, l, a):
@@ -83,7 +82,7 @@ class Chao(pg.sprite.DirtySprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.layer = 10
+        self.layer = 1
 
 class Mapa:
     #def __init__(self, nFase, nQuadrante, filename):
