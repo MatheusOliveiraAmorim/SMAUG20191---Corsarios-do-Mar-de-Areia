@@ -8,54 +8,43 @@ from c_jogador import *
 FASE = 0
 FASE_Q = 0
 
+LISTA_FASES = [
+    {
+        "player": (554.167, 681),
+        "shapes": [
+            (-234, 349, 330, 330, "caixa"),#caixa esquerda
+            (-566, 349, 330, 330, "caixa"), #caixa direita
+            (-1280, 0, 445, 35), #plataforma canto
+            (-505, -315, 300, 35), #degrau
+            (0, -450, 445, 35), #plataforma porta
+            (1280, -500, 400, 1200), #Parede direita down
+            (450, -959, 1200, 950), #Parede direita up
+            (-1685, -1000, 400, 1690), #Parede esquerda
+            (-1280, -1000, LARGURA*2, 40) #teto
+        ],
+        "portas": [
+            (222, -770, "porta-saida")
+        ]
+    },
+    {
+        "player": (-1100, 675),
+        "enemy": (900, 681),
+        "shapes": [
+            # (-1280, 359, 200, 320, "porta-entrada"),
+            (-234, 18, 330, 330, "caixa"),
+            (-234, 349, 330, 330, "caixa"),
+            (-566, 349, 330, 330, "caixa"),
+            (-1685, -1000, 400, 1690)
+        ],
+        "portas": [
+            (-1280, 359, "porta-entrada")
+        ]
+    }
+]
+
 dirname = os.path.dirname(__file__)
 
 bg = pg.image.load(os.path.join(dirname, 'asset/image/bg/f0_bg.jpg'))
-
-
-LISTA_PLATAFORMA_TUTO = {
-    "player": (554.167, 681),
-    "shapes": [
-        (-234, 349, 330, 330, "caixa"),#caixa esquerda
-        (-566, 349, 330, 330, "caixa"), #caixa direita
-        (-1280, 0, 445, 35), #plataforma canto
-        (-505, -315, 300, 35), #degrau
-        (0, -450, 445, 35), #plataforma porta
-        (1280, -500, 400, 1200), #Parede direita down
-        (450, -959, 1200, 950), #Parede direita up
-        (-1685, -1000, 400, 1690), #Parede esquerda
-        (-1280, -1000, LARGURA*2, 40), #teto
-        (222, -770, 200, 320, "porta-saida")
-    ]
-}
-
-LISTA_PLATAFORMA_TUTO_2 = {
-    "player": (222, -450),
-    "shapes": [
-        (-234, 349, 330, 330, "caixa"),#caixa esquerda
-        (-566, 349, 330, 330, "caixa"), #caixa direita
-        (-1280, 0, 445, 35, "plataforma"), #plataforma canto
-        (-505, -315, 300, 35, "plataforma"), #degrau
-        (0, -450, 445, 35, "plataforma"), #plataforma porta
-        (1280, -500, 400, 1200), #Parede direita down
-        (450, -959, 1200, 950), #Parede direita up
-        (-1685, -1000, 400, 1690), #Parede esquerda
-        (-1280, -1000, LARGURA*2, 40), #teto
-        (222, -770, 200, 320, "porta-saida")
-    ]
-}
-
-LISTA_PLATAFORMA_FASE1 = {
-    "player": (-1100, 675),
-    "enemy": (900, 681),
-    "shapes": [(-1280, 359, 200, 320, "porta-entrada"),
-    (-234, 18, 330, 330, "caixa"),
-    (-234, 349, 330, 330, "caixa"),
-    (-566, 349, 330, 330, "caixa"),
-    (-1685, -1000, 400, 1690)
-    ]
-}
-
 
 class Plataforma(pg.sprite.Sprite):
     def __init__(self, x, y, l, a, tag=""):
@@ -84,24 +73,34 @@ class Chao(pg.sprite.DirtySprite):
         self.rect.y = y
         self.layer = 1
 
+class Porta(pg.sprite.Sprite):
+    def __init__(self, x, y, tag):
+        pg.sprite.Sprite.__init__(self)
+        self.image = scn_porta
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.tag = tag
+
+        self.rendered_at = pg.time.get_ticks() / 1000
+        self.delay = 3
+        self.enabled = False
+
+    def update(self):
+        now = pg.time.get_ticks() / 1000
+
+        if now - self.rendered_at >= self.delay and not self.enabled:
+            self.enabled = True
+
 class Mapa:
     #def __init__(self, nFase, nQuadrante, filename):
     def __init__(self, nFase, nQuadrante):
-        self.nFase = nFase
         self.nQuadrante = nQuadrante
         #self.filename = filename
         self.qAltura = ALTURA
         self.qLargura = LARGURA
         self.MapaAltura = nQuadrante * self.qAltura / 2
         self.MapaLargura = nQuadrante * self.qLargura / 2
-        #print(self.MapaAltura, self.MapaLargura)
-
-    def update(self, nFase):
-        if self.nFase == 0:
-            pg.image.load(self.filename)
-            self.nQuadrante = 4
-        if self.nFase == 1:
-            self.nQuadrante = 6
 
 
 class Camera:

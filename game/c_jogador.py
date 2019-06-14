@@ -1,17 +1,17 @@
 import pygame as pg
 import random
 from jogo_config import *
-from fase import *
 from c_tiro import *
 
 vec = pg.math.Vector2 #inicializa um vetor de 2 dimensões
 
 class Jogador(pg.sprite.Sprite):
-    def __init__(self, jogo):
+    def __init__(self, jogo, menu):
         #Classe com os atributos do jogador
         pg.sprite.Sprite.__init__(self)
         #Passando o atributo jogo para o jogador ele toma conhecimento de todos os objetos(self) no codigo, assim esses podem ser usados como referencia
         self.jogo = jogo
+        self.menu = menu
         self.image = char_r
         #self.image.fill(AMARELO)
         self.rect = self.image.get_rect()
@@ -48,14 +48,20 @@ class Jogador(pg.sprite.Sprite):
 
     def interagir(self):
         colIobj = pg.sprite.spritecollide(self, self.jogo.iobjeto, False)
-        if colIobj:
-            for tobj in colIobj:
-                if tobj.tag and tobj.tag == "porta-saida":
-                    self.jogo.fase.nFase = int(1)
-                    self.jogo.novo(LISTA_PLATAFORMA_FASE1)
-                if tobj.tag and tobj.tag == "porta-entrada":
-                    self.jogo.fase.nFase = int(1)
-                    self.jogo.novo(LISTA_PLATAFORMA_TUTO_2)
+        for tobj in colIobj:
+            if not tobj.enabled:
+                return
+
+            fase = 0
+            if tobj.tag and tobj.tag == "porta-saida":
+                fase = self.jogo.nFase + 1
+            elif tobj.tag and tobj.tag == "porta-entrada":
+                fase = self.jogo.nFase - 1
+
+            tobj.rendered_at = pg.time.get_ticks() / 1000
+            self.jogo.nFase = fase
+            self.jogo.novo()
+            pg.event.clear()
 
     def set_sprite(self, image):
         self.image = image
@@ -110,6 +116,8 @@ class Jogador(pg.sprite.Sprite):
         if self.vida <= 0:
             self.stop_music()
             self.kill()
+            self.menu.is_jogando = False
+            self.menu.is_gameover = True
 
     def atirar(self):
         agora = pg.time.get_ticks() / 1000
@@ -170,7 +178,7 @@ class Jogador(pg.sprite.Sprite):
         if tecla[pg.K_z]:
             self.pulo()
 
-        if tecla[pg.K_SPACE]:
+        if tecla[pg.K_c]:
             self.interagir()
 
         #Adiciona coeficiente de fricção a equação de movimento para estabilizar o movimento do jogador

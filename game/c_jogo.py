@@ -6,26 +6,28 @@ from c_jogador import *
 from c_inimigo import *
 
 class Jogo:
-    def __init__(self, janela):
+    def __init__(self, janela, menu):
         # Inicializa a tela
         self.janela = janela
         self.clock = pg.time.Clock()
         self.rodando = True
         self.todos_sprites = pg.sprite.Group()
-        self.jogador = Jogador(self)
+        self.jogador = Jogador(self, menu)
         self.inimigo = Inimigo(self)
         self.chao = pg.sprite.Group()
         self.plataformas = pg.sprite.Group()
         self.iobjeto = pg.sprite.Group()
         self.tiros = pg.sprite.Group()
         self.tiros_jogador = pg.sprite.Group()
+        self.nFase = 0
 
-    def novo(self, fase):
+    def novo(self):
         self.todos_sprites.empty()
         self.chao.empty()
         self.plataformas.empty()
+        self.iobjeto.empty()
 
-        # Comeca um jogo novo
+        fase = LISTA_FASES[self.nFase]
         self.fase = Mapa(FASE, FASE_Q)
         self.camera = Camera(self.fase.MapaLargura, self.fase.MapaAltura)
 
@@ -51,6 +53,11 @@ class Jogo:
             else:
                 self.plataformas.add(p)
 
+        for porta in fase["portas"]:
+            p = Porta(*porta)
+            self.todos_sprites.add(p)
+            self.iobjeto.add(p)
+
         self.desenhar()
 
     def executando(self):
@@ -58,11 +65,14 @@ class Jogo:
         self.jogando = True
         pg.mixer.music.load(os.path.join(os.path.dirname(__file__), "asset/sound/music/music.mp3"))
 
-        while self.jogando:
-            self.clock.tick(FPS)
-            self.eventos()
-            self.update()
-            self.desenhar()
+        # while self.jogando:
+        #     self.clock.tick(FPS)
+        #     self.eventos()
+        #     self.update()
+        #     self.desenhar()
+        self.eventos()
+        self.update()
+        self.desenhar()
 
     def update(self):
         # Loop do jogo - atualiza a interface

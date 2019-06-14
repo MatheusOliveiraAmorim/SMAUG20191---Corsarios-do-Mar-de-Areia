@@ -5,7 +5,7 @@ import pygame as pg
 TITULO = "Corsários do Mar de Areia"
 LARGURA = 1280
 ALTURA = 720
-FPS = 60
+FPS = 30
 
 #Propriedades de jogador
 JOGADOR_ACEL = 0.85

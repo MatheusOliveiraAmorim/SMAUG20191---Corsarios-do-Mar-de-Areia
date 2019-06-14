@@ -1,5 +1,6 @@
 import pygame as pg
 from jogo_config import *
+from fase import *
 
 pg.init()
 pg.mixer.init()
@@ -10,15 +11,19 @@ from c_menu import *
 from c_jogo import *
 
 menu = Menu(janela)
-jogo = Jogo(janela)
+jogo = Jogo(janela, menu)
+jogo.nFase = 0
+jogo.novo()
+
+clock = pg.time.Clock()
 
 while menu.is_rodando:
+    clock.tick(FPS)
     janela.fill((255, 255, 255))
     pg.event.pump()
     menu.executando()
 
     if menu.is_jogando:
-        jogo.novo(LISTA_PLATAFORMA_TUTO)
         jogo.executando()
         jogo.update()
 

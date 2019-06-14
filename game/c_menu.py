@@ -7,6 +7,7 @@ from c_inimigo import *
 from fase import *
 
 font = pg.font.SysFont("arial", 16, False, False)
+font_gameover = pg.font.SysFont("arial", 42, False, False)
 
 class MenuInicial:
     def __init__(self, menu):
@@ -31,27 +32,39 @@ class MenuInicial:
             if self.r_jogar.collidepoint(e.pos):
                 self.menu.is_jogando = True
 
+class GameOver:
+    def __init__(self, menu):
+        self.menu = menu
+
+        self.txt_morreu = font_gameover.render("VOCE FALICEU", True, (255, 0, 0))
+        self.reiniciar = self.txt_morreu.get_rect()
+        self.reiniciar.topleft = (LARGURA/2, ALTURA/2)
+
+    def executando(self):
+        self.menu.janela.blit(self.txt_morreu, self.reiniciar.topleft)
+
 class Menu:
     def __init__(self, janela):
         self.janela = janela
         self.is_rodando = True
         self.is_jogando = False
         self.is_credito = False
+        self.is_gameover = False
 
     def menu_inicial(self):
         menu_inicial = MenuInicial(self)
         menu_inicial.executando()
 
-    def menu_jogar():
-        pass
-
-    def menu_pausa():
-        pass
+    def gameover(self):
+        gameover = GameOver(self)
+        gameover.executando()
 
     def executando(self):
         self.eventos()
 
-        if self.is_jogando == False:
+        if self.is_gameover:
+            self.gameover()
+        elif not self.is_jogando:
             self.menu_inicial()
 
     def eventos(self):
