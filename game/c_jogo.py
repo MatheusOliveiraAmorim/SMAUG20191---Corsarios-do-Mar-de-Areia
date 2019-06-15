@@ -134,8 +134,8 @@ class Jogo:
 
     def desenhar(self):
         # Loop do jogo - desenha a tela
-        #self.janela.blit(bg, (-1280,-720))
-        self.janela.fill(BRANCO)
+        self.janela.blit(bg, (0,0))
+        self.janela.fill(CINZA)
         # self.jogador.draw()
         self.inimigo.draw()
         #self.todos_sprites.draw(self.janela)

@@ -15,17 +15,17 @@ class MenuInicial:
 
         self.img_jogar = font.render("JOGAR", True, (255, 0, 0))
         self.r_jogar = self.img_jogar.get_rect()
-        self.r_jogar.topleft = (LARGURA/2, ALTURA/2)
+        self.r_jogar.topleft = ((LARGURA/2) - 8, (ALTURA/2) + 25)
 
-        self.img_creditos = font.render("CREDITOS", True, (255, 0, 0))
+        self.img_creditos = font_gameover.render("Corsários do Mar de Areia", True, (255, 0, 0))
         self.r_creditos = self.img_creditos.get_rect()
-        self.r_creditos.topleft = ((LARGURA/2) - 8, (ALTURA/2) + 16)
+        self.r_creditos.topleft = ((LARGURA/2) - 8, (ALTURA/2) - 25)
 
     def executando(self):
         self.eventos()
 
-        self.menu.janela.blit(self.img_jogar, self.r_jogar.topleft)
         self.menu.janela.blit(self.img_creditos, self.r_creditos.topleft)
+        self.menu.janela.blit(self.img_jogar, self.r_jogar.topleft)
 
     def eventos(self):
         for e in pg.event.get(pg.MOUSEBUTTONDOWN):

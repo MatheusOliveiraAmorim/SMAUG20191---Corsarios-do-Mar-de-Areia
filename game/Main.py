@@ -19,7 +19,7 @@ clock = pg.time.Clock()
 
 while menu.is_rodando:
     clock.tick(FPS)
-    janela.fill((255, 255, 255))
+    janela.fill(AREIA)
     pg.event.pump()
     menu.executando()
 

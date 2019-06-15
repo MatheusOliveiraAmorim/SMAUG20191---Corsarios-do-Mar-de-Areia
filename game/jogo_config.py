@@ -17,6 +17,8 @@ JOGADOR_PULO = 25
 
 dirname = os.path.dirname(__file__)
 
+bg = pg.image.load(os.path.join(dirname, 'asset/image/bg/bg0.png'))
+
 char_r = pg.image.load(os.path.join(dirname, 'asset/image/char/pnp/pnp_idle_right.png'))
 char_l = pg.image.load(os.path.join(dirname, 'asset/image/char/pnp/pnp_idle_left.png'))
 
@@ -34,6 +36,11 @@ walkLeft = [pg.image.load(os.path.join(dirname, 'asset/image/char/pnp/pnp_left_0
 
 scn_caixa = pg.image.load(os.path.join(dirname, 'asset/image/bg/caixa.png'))
 scn_porta = pg.image.load(os.path.join(dirname, 'asset/image/bg/porta.png'))
+scn_plat1 = pg.image.load(os.path.join(dirname, 'asset/image/bg/platf1.png'))
+scn_plat2 = pg.image.load(os.path.join(dirname, 'asset/image/bg/platf2.png'))
+scn_parede1 = pg.image.load(os.path.join(dirname, 'asset/image/bg/parede1.png'))
+scn_parede2 = pg.image.load(os.path.join(dirname, 'asset/image/bg/parede2.png'))
+scn_parede3 = pg.image.load(os.path.join(dirname, 'asset/image/bg/parede3.png'))
 
 #Paleta de cores (VALORES EM RGB)
 BRANCO = (255,255,255)
@@ -42,3 +49,7 @@ VERMELHO = (255,0,0)
 VERDE = (0,255,0)
 AZUL = (0,0,255)
 AMARELO = (255,255,0)
+MARROM = (78,9,2)
+CINZA = (21,21,21)
+AREIA = (240,222,180)
+CEU = (135,206,235)

@@ -12,14 +12,14 @@ LISTA_FASES = [
     {
         "player": (554.167, 681),
         "shapes": [
-            (-234, 349, 330, 330, "caixa"),#caixa esquerda
-            (-566, 349, 330, 330, "caixa"), #caixa direita
-            (-1280, 0, 445, 35), #plataforma canto
-            (-505, -315, 300, 35), #degrau
-            (0, -450, 445, 35), #plataforma porta
-            (1280, -500, 400, 1200), #Parede direita down
-            (450, -959, 1200, 950), #Parede direita up
-            (-1685, -1000, 400, 1690), #Parede esquerda
+            (-234, 350, 330, 330, "caixa"),#caixa esquerda
+            (-566, 350, 330, 330, "caixa"), #caixa direita
+            (-1280, 0, 445, 35, "platf1"), #plataforma canto
+            (-505, -315, 300, 35, "platf2"), #degrau
+            (0, -450, 445, 35, "platf1"), #plataforma porta
+            (1279, -500, 400, 1200, "par1"), #Parede direita down
+            (450, -959, 1200, 950, "par2"), #Parede direita up
+            (-1680, -1000, 400, 1690, "par3"), #Parede esquerda
             (-1280, -1000, LARGURA*2, 40) #teto
         ],
         "portas": [
@@ -31,10 +31,11 @@ LISTA_FASES = [
         "enemy": (900, 681),
         "shapes": [
             # (-1280, 359, 200, 320, "porta-entrada"),
-            (-234, 18, 330, 330, "caixa"),
-            (-234, 349, 330, 330, "caixa"),
-            (-566, 349, 330, 330, "caixa"),
-            (-1685, -1000, 400, 1690)
+            (-234, 20, 330, 330, "caixa"),
+            (-234, 350, 330, 330, "caixa"),
+            (-566, 350, 330, 330, "caixa"),
+            (-1680, -1000, 400, 1690, "par3"),
+            (1279, -500, 400, 1200, "par1")
         ],
         "portas": [
             (-1280, 359, "porta-entrada")
@@ -44,7 +45,7 @@ LISTA_FASES = [
 
 dirname = os.path.dirname(__file__)
 
-bg = pg.image.load(os.path.join(dirname, 'asset/image/bg/f0_bg.jpg'))
+#bg = pg.image.load(os.path.join(dirname, 'asset/image/bg/f0_bg.jpg'))
 
 class Plataforma(pg.sprite.Sprite):
     def __init__(self, x, y, l, a, tag=""):
@@ -52,11 +53,21 @@ class Plataforma(pg.sprite.Sprite):
         self.image = pg.Surface((l, a))
 
         if tag == "":
-            self.image.fill(VERDE)
+            self.image.fill(MARROM)
         elif tag == "porta-saida" or tag == "porta-entrada":
             self.image = scn_porta
         elif tag == "caixa":
             self.image = scn_caixa
+        elif tag == "platf1":
+            self.image = scn_plat1
+        elif tag == "platf2":
+            self.image = scn_plat2
+        elif tag == "par1":
+            self.image = scn_parede1
+        elif tag == "par2":
+            self.image = scn_parede2
+        elif tag == "par3":
+            self.image = scn_parede3
 
         self.rect = self.image.get_rect()
         self.rect.x = x
